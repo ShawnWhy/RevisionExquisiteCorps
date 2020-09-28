@@ -7,12 +7,12 @@ import reactDOM from "react-dom";
 import moment from "moment";
 import io from "socket.io-client";
 // import { set } from "mongoose";
-import openSocket from 'socket.io-client';
+import classNames from "classnames";
 
 
 function Chat(){
 
-
+ 
 
   const socket = io("http://localhost:3001", {autoConnect:false,
   transports: ["websocket", "polling"]
@@ -58,12 +58,25 @@ const chatwindowRef = useRef();
 
 // this happens automatically and changes when the 
 //username changes
+const [roomSelect, setRoomSelect]= useState("");
+
+const[dolls, setDolls]=useState("")
 
 //   var chatWindow = reactDOM.
 
 // },[])
+useEffect(()=>{
+  if(curtain==="off")
+  {
+    setDolls("on");
+  } 
+
+
+},[])
+
+
   useEffect(() => {
-    
+
 
     if(userName.length>0){
     socket.connect();
@@ -144,7 +157,9 @@ const chatwindowRef = useRef();
   }
   //if the thing has any thing init, the curtain is turned on
   else if(tempUsername.length>0){
+    setDolls("off");
     setCurtain("on")
+
     setUserName(tempUsername)
       // console.log(userName);
   //turns on and connects to socket.io after two seconds
@@ -230,10 +245,145 @@ const chatwindowRef = useRef();
   const closeChat =()=>{
     setChat("off")
   }
+
+// ghosts
+
+  const andreb = classNames("invisible",
+  {
+    "andreb":dolls==="on",
+    "andrebSelected":roomSelect==="1"
+  });
+  const rene = classNames("invisible",
+  {
+    "rene": dolls ==="on",
+    "reneSelected": roomSelect==="2"
+  })
+  const pablo = classNames("invisible",
+{
+    "pablo":dolls==="on",
+    "pabloSelected":roomSelect==="3"
+  });
+  const benjamin = classNames("invisible",
+  {
+    "benjamin":dolls==="on",
+    "benjaminSelected":roomSelect==="4"
+  });
+  const leonora = classNames("invisible",
+  {
+    "leonora":dolls==="on",
+    "leonoraSelected":roomSelect==="5"
+  });
+  const max = classNames("invisible",
+  {
+    "max":dolls==="on",
+    "maxSelected":roomSelect==="6"
+  });
+  const andre = classNames("invisible",
+  {
+    "andre":dolls==="on",
+    "andreSelected":roomSelect==="7"
+  });
+  const marcel=classNames("invisible",
+  {"marcel":dolls==="on",
+    "marcelSelected":roomSelect==="8"}
+
+  )
+
+
+
+const rooms=["1","2","3","4","5","6","7","8"]
+const [nameTag, setNameTag]=useState({
+  1:"off",
+  2:"off",
+  3:"off",
+  4:"off",
+  5:"off",
+  6:"off",
+  7:"off",
+  8:"off",
+})
+const [nameTagTwo, setNameTagTwo]=useState({
+  1:"off",
+  2:"off",
+  3:"off",
+  4:"off",
+  5:"off",
+  6:"off",
+  7:"off",
+  8:"off",
+})
+const [previousDoll,setPreviousDoll]=useState("")
+const submitRoom = (event)=>{
+  event.stopPropagation();
+  event.preventDefault();
+  console.log(event.target.id)
+  var room =event.target.id;
+  setRoomSelect(room)
+  setNameTagTwo({[room]:"on"})
+  console.log(nameTagTwo);
+  if(previousDoll.length>0){
+    setNameTag({...nameTag,[previousDoll]:"off"})
+    console.log("nametag ")
+    console.log(nameTag)
+  }
+  setPreviousDoll(room)
+  console.log("previousedoll")
+ console.log(previousDoll)
+
+  }
+
+const displayNameTag=(event)=>{
+  event.stopPropagation();
+  event.preventDefault();
+  var nameId = event.target.id;
+  setNameTag({...nameTag,[nameId]:"on"})
+}
+const hideNameTag=(event)=>{
+  event.stopPropagation();
+  event.preventDefault();
+  var nameId = event.target.id;
+  if(nameTagTwo[nameId]!=="on"){
+  setNameTag({...nameTag,[nameId]:"off"})
+}
+}
+
+
+// const dollRef1=useRef()
+// const dollRef2=useRef()
+// const dollRef3=useRef()
+// const dollRef4=useRef()
+// const dollRef5=useRef()
+// const dollRef6=useRef()
+// const dollRef7=useRef()
+// const dollRef8=useRef()
+
+
  
 return (
 //everything
 <div className="allContainer">
+  <div className={dolls==="on"?"dollsBackDrop":"invisible"}></div>
+      {/* name input section */}
+      <div className={"nameInputDiv "+(curtain==="on"? " invisible":"")}>
+        <div className="nameQuestion">
+          Welcome dear visitor,
+          what would you like to be called?
+          </div>
+          {/* input it self */}
+          <input className="nameinput" type="text" onChange={handleNameInputChange}></input>
+          <input type="submit" onClick = {opencurtain}></input>
+          {/* the warning div */}
+          <div className={"nameWarning "+(nameWarning==="on"? "visible":"invisible")}>Sorry {tempUsername} is already playing</div>
+
+    </div>
+<div id ={rooms[0]} className={andreb} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[1]==="on"?"":"invisible")}>Andre B</p></div>
+  <div id ={rooms[1]} className={rene} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[2]==="on"?"":"invisible")}>Rene</p></div>
+  <div id ={rooms[2]} className={pablo} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[3]==="on"?"":"invisible")}>Pablo</p></div>
+  <div id ={rooms[3]} className={benjamin} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[4]==="on"?"":"invisible")}>Benjamin</p></div>
+  <div id ={rooms[4]} className={leonora} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[5]==="on"?"":"invisible")}>Leonora</p></div>
+  <div id={rooms[5]} className={max} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[6]==="on"?"":"invisible")}>max</p></div>
+  <div id ={rooms[6]} className={andre} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[7]==="on"?"":"invisible")}>Andre M</p></div>
+  <div id ={rooms[7]} className={marcel} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[8]==="on"?"":"invisible")}>Marcel</p></div>
 <div className={"finalPoemModal "+(poemModal==="on"? "":"invisible")}>
     <div className={"finalPoemModalContent "+(poemModal==="on"? "visible":"invisible")}>
       <div className="closeModal" onClick={closePoem}>X</div>
@@ -270,27 +420,15 @@ return (
   <div className="exterior">
     <div className={"leftCurtain "+( curtain==="on"? "leftcurtainOn":"")}></div>
     <div className={"rightCurtain "+ (curtain==="on"? "rightCurtainOn":"")}></div>
-    {/* name input section */}
-    <div className={"nameInputDiv "+(curtain==="on"? " invisible":"")}>
-        <div className="nameQuestion">
-          Welcome dear visitor,
-          what would you like to be called?
-          </div>
-          {/* input it self */}
-          <input className="nameinput" type="text" onChange={handleNameInputChange}></input>
-          <input type="submit" onClick = {opencurtain}></input>
-          {/* the warning div */}
-          <div className={"nameWarning "+(nameWarning==="on"? "visible":"invisible")}>Sorry {tempUsername} is already playing</div>
 
-    </div>
   </div>
 
   {/* this is the room */}
   <div className="interior ">
-    <div className={interior==="on"?"leonora":"invisible"}></div>
-    <div className={interior==="on"?"marcel":"invisible"}></div>
-    <div className={interior==="on"?"max":"invisible"}></div>
-    <div className={interior==="on"?"Andre":"invisible"}></div>
+
+<div className={curtain==="on"?"ghostHeadLeonora":"invisible"}></div> 
+ 
+
 
 
 

@@ -74,8 +74,16 @@
 } */
 
 .exterior{
-  
-    
+}
+.dollsBackDrop{
+    background-color:rgba(0, 0, 0, 0.603);
+    /* opacity: 80%; */
+    position:fixed;
+    z-index:2;
+    text-align:center;
+    height:100%;
+    width:100%;
+
 }
 .leftCurtain{
     background-image: url("./left.png");
@@ -86,6 +94,7 @@
     
     position:fixed;
     left:0;
+    top:0%;
     z-index:1;
 }
 .leftcurtainOn{
@@ -104,6 +113,7 @@
     height:100%;
     position:fixed;
     right:0;
+    top:0%;
     z-index:1
 }
 
@@ -145,7 +155,57 @@
     height:0;
 
 }
+.ghostHeadAndre{
+    background-image: url("./andrebhead.png");
+    background-repeat:no-repeat;
+    background-size:auto 100%;
+    position:absolute;
+    top: 22%;
+    left:51%;
+    height:70px;
+    width:70px;
+    animation:ghostheadandre 1.5s both;
+    transform-origin: center;
 
+}
+@keyframes ghostheadandre{
+    0%{top:-50%;
+        left:51%;
+        transform:rotate(30deg)}
+    
+    
+    100%{top:22%;
+    left:51%;
+    transform: rotate(370deg);
+}
+
+}
+.ghostHeadLeonora{
+    background-image: url("./leonorahead.png");
+    background-repeat:no-repeat;
+    background-size:auto 100%;
+    position:absolute;
+    top: 22%;
+    left:51%;
+    height:70px;
+    width:70px;
+    animation:ghostheadleonora 1.5s both;
+    transform-origin: center;
+
+}
+@keyframes ghostheadleonora
+{
+    0%{top:-50%;
+        left:51%;
+        transform:rotate(30deg)}
+    
+    
+    100%{top:22%;
+    left:51%;
+    transform: rotate(370deg);
+}
+
+}
 
 .messageBox::-webkit-scrollbar {
     display: none;
@@ -348,67 +408,219 @@ p{
     0% {bottom:100% }
     100%{bottom:10%}
 }
+.andreb{
+    visibility:visible;
+    height:50%;
+    widows: 10%;
+    background-image:url("./andreb.png");
+    background-repeat:no-repeat;
+    background-size: contain;
+    position:fixed;
+    z-index:2;
+    width:8%;
+    margin:2%;
+    left:2%;
+    animation:fallAnimation 1s both;
+    animation-delay:1.5s
+    
+
+}
+.andreb:hover{
+    background-image:url("./andreblight.png");
+}
+
+.andrebSelected{
+    background-image:url("./andreblight.png");
+    width:12%
+
+}
+.rene{
+    visibility:visible;
+    height:50%;
+    widows: 10%;
+    background-image:url("./rene.png");
+    background-repeat:no-repeat;
+    background-size: contain;
+    position:fixed;
+    z-index:2;
+    width:8%;
+    margin:2%;
+    left:8%;
+    animation:fallAnimation2 1s both;
+    animation-delay:1s
+
+}
+.rene:hover{
+    background-image:url("./renelight.png");
+}
+.reneSelected{
+    background-image:url("./renelight.png");
+    width:12%
+
+
+
+}
+.pablo{
+    visibility:visible;
+    height:50%;
+    widows: 10%;
+    background-image:url("./pablo.png");
+    background-repeat:no-repeat;
+    background-size: contain;
+    position:fixed;
+    z-index:2;
+    width:8%;
+    margin:2%;
+    left:18%;
+    animation:fallAnimation 1s both;
+    animation-delay:.5s
+
+}
+.pablo:hover{
+    background-image:url("./pablolight.png");
+
+}
+.pabloSelected{
+    background-image:url("./pablolight.png");
+    width:12%
+
+}
+.nameTag{
+    position:relative;
+    background-color:white;
+    
+    padding:3%;
+    border:double black;
+    top:60%
+}
+.benjamin{
+    visibility:visible;
+    height:50%;
+    widows: 10%;
+    background-image:url("./benjamin.png");
+    background-repeat:no-repeat;
+    background-size: contain;
+    position:fixed;
+    z-index:2;
+    width:8%;
+    margin:2%;
+    left:26%;
+    animation:fallAnimation2 1s both;
+
+}
+
+.benjamin:hover{
+    background-image:url("./benjaminlight.png");
+
+}
+.benjaminSelected{
+    background-image:url("./benjaminlight.png");
+    width:12%
+
+
+
+}
+
 
 
   .leonora{
+    visibility:visible;
     height:50%;
     widows: 10%;
     background-image:url("./Leonora.png");
     background-repeat:no-repeat;
     background-size: contain;
     position:fixed;
-    z-index:0;
-    width:20%;
+    z-index:2;
+    width:8%;
     margin:2%;
-    left:15%;
+    right:26%;
     animation:fallAnimation 1s both
-    
+}
+.leonora:hover{
+    background-image:url("./leonoralight.png");
+}
+.leonoraSelected{
+    background-image:url("./leonoralight.png");
+    width:12%
+
+
+
 }
 
 .max{
+    visibility:visible;
     height:50%;
     widows: 10%;
     background-image:url("./Max.png");
     background-repeat:no-repeat;
     background-size: contain;
     position:fixed;
-    z-index:0;
-    width:15%;
+    z-index:2;
+    width:8%;
     margin:2%;
-    left:25%;
+    right:18%;
     animation:fallAnimation2 1s both;
     animation-delay:.5s
 
 }
-.Andre{
+.max:hover{
+    background-image:url("./maxlight.png")
+}
+.maxSelected{
+    background-image:url("./maxlight.png");
+    width:12%
+
+}
+.andre{
+    visibility:visible;
     height:50%;
     widows: 10%;
     background-image:url("./andre.png");
     background-repeat:no-repeat;
     background-size: contain;
     position:fixed;
-    z-index:0;
-    width:15%;
+    z-index:2;
+    width:8%;
     margin:2%;
-    right:22%;
+    right:10%;
     animation:fallAnimation2  1s both;
     animation-delay: 1s
 
 }
+.andre:hover{
+    background-image:url("./andrelight.png")
+}
+.andreSelected{
+    background-image:url("./andrelight.png");
+    width:12%
+
+}
 .marcel{
+    visibility:visible;
     height:50%;
     widows: 10%;
     background-image:url("./marcel.png");
     background-repeat:no-repeat;
     background-size: contain;
     position:fixed;
-    z-index:0;
-    width:20%;
+    z-index:2;
+    width:8%;
     margin:2%;
-    right:5%;
+    right:2%;
 
     animation:fallAnimation 1s both;
     animation-delay:1.5s;
+}
+.marcel:hover{
+    background-image:url("./marcellight.png")
+
+}
+.marcelSelected{
+    background-image:url("./marcellight.png");
+    width:12%
+
+ 
 
 }
 .title{

@@ -355,7 +355,7 @@
    
 
 }
-andreFall{
+.andreFall{
     animation:ghostheadandre 1.5s both;
     transform-origin: center;
 
@@ -379,12 +379,12 @@ andreFall{
     transform: rotate(370deg);
     position:absolute;
     top: 22%;
-    left:51%;
+    left:50%;
     height:70px;
     width:70px;
     
 }
-marcelFall{
+.marcelFall{
     animation:ghostheadmarcel 1.5s both;
     transform-origin: center;
 }
@@ -396,7 +396,7 @@ marcelFall{
     
     
     100%{top:22%;
-    left:51%;
+    left:50%;
     transform: rotate(370deg);
 }
 }

@@ -200,9 +200,10 @@ useEffect(()=>{
 
   //the ghost of surrelists past will speak to you
   const handleMessagetoGhostOut = (event)=>{
-    setMaskFly("on")
     event.preventDefault();
     event.stopPropagation();
+    setMaskFly("on")
+
     socket.open();
     setTimeout(() => {
       setMaskFly("off")

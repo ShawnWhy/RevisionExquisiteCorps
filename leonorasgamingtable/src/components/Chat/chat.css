@@ -155,45 +155,240 @@
     height:0;
 
 }
-.ghostHeadAndre{
+
+
+/* dolls and doll animations */
+.ghostHeadAndreB{
     background-image: url("./andrebhead.png");
     background-repeat:no-repeat;
     background-size:auto 100%;
     position:absolute;
-    top: 22%;
-    left:51%;
-    height:70px;
-    width:70px;
-    animation:ghostheadandre 1.5s both;
+    transform: rotate(370deg);
+    top:21%;
+    left:51.3%;
+    transform: rotate(370deg);
+    height:75px;
+    width:75px;
+
+
+}
+.andreBFall{
+    animation:ghostheadandreb 1.5s both;
     transform-origin: center;
 
 }
-@keyframes ghostheadandre{
+@keyframes ghostheadandreb{
     0%{top:-50%;
         left:51%;
         transform:rotate(30deg)}
     
     
-    100%{top:22%;
-    left:51%;
+    100%{top:21%;
+    left:51.3%;
     transform: rotate(370deg);
 }
-
 }
-.ghostHeadLeonora{
-    background-image: url("./leonorahead.png");
+
+.ghostHeadRene{
+    
+        background-image: url("./renehead.png");
+        background-repeat:no-repeat;
+        background-size:auto 100%;
+        transform: rotate(370deg);
+        position:absolute;
+        top: 20%;
+        left:49.5%;
+        height:85px;
+        width:85px;
+        
+    
+    }
+    .reneFall{
+        animation:ghostheadrene 1.5s both;
+        transform-origin: center;
+
+    }
+
+    @keyframes ghostheadrene{
+        0%{top:-50%;
+            left:50%;
+            transform:rotate(30deg)}
+        
+        
+        100%{top:20%;
+        left:49.5%;
+        transform: rotate(370deg);
+    }
+    }
+    .ghostHeadPablo{
+        background-image: url("./pablohead.png");
+        background-repeat:no-repeat;
+        background-size:auto 100%;
+        position:absolute;
+        transform: rotate(370deg);
+        top: 22%;
+        left:51%;
+        height:70px;
+        width:70px;
+       
+    
+    }
+    .pabloFall{
+        animation:ghostheadpablo 1.5s both;
+        transform-origin: center;
+        
+    }
+    @keyframes ghostheadpablo
+    {
+        0%{top:-50%;
+            left:51%;
+            transform:rotate(30deg)}
+        
+        
+        100%{top:22%;
+        left:51%;
+        transform: rotate(370deg);
+    }
+    }
+    
+
+    .ghostHeadBenjamin{
+        background-image: url("./benjaminhead.png");
+        background-repeat:no-repeat;
+        background-size:auto 100%;
+        position:absolute;
+        transform: rotate(370deg);
+        top: 21.5%;
+        left:50%;
+        height:80px;
+        width:80px;
+        
+    
+    }
+    .benjaminFall{
+        animation:ghostheadbenjamin 1.5s both;
+        transform-origin: center;
+
+    }
+    @keyframes ghostheadbenjamin
+    {
+        0%{top:-50%;
+            left:51%;
+            transform:rotate(30deg)}
+        
+        
+        100%{top:21.5%;
+        left:50%;
+        transform: rotate(370deg);
+    }
+    }
+    .ghostHeadLeonora{
+        background-image: url("./leonorahead.png");
+        background-repeat:no-repeat;
+        background-size:auto 100%;
+        position:absolute;
+        transform: rotate(370deg);
+        top: 22%;
+        left:51%;
+        height:75px;
+        width:75px;
+        
+    
+    }
+    .leonoraFall{
+        animation:ghostheadleonora 1.5s both;
+        transform-origin: center;
+
+    }
+    @keyframes ghostheadleonora
+    {
+        0%{top:-50%;
+            left:51%;
+            transform:rotate(30deg)}
+        
+        
+        100%{top:22%;
+        left:51%;
+        transform: rotate(370deg);
+    }
+    }
+
+.ghostHeadMax{
+    background-image: url("./maxhead.png");
     background-repeat:no-repeat;
     background-size:auto 100%;
+    position:absolute;
+    transform: rotate(370deg);
+    top: 21%;
+    left:50%;
+    height:75px;
+    width:75px;
+    
+}
+.maxFall{
+    animation:ghostheadmax 1.5s both;
+    transform-origin: center;
+
+}
+@keyframes ghostheadmax
+{
+    0%{top:-50%;
+        left:49%;
+        transform:rotate(30deg)}
+    
+     
+    100%{top:21%;
+    left:50%;
+    transform: rotate(380deg);
+}
+}
+.ghostHeadAndre{
+    background-image: url("./andrehead.png");
+    background-repeat:no-repeat;
+    background-size:auto 100%;
+    transform: rotate(370deg);
+    position:absolute;
+    top: 21.5%;
+    left:50.5%;
+    height:75px;
+    width:75px;
+   
+
+}
+andreFall{
+    animation:ghostheadandre 1.5s both;
+    transform-origin: center;
+
+}
+@keyframes ghostheadandre
+{
+    0%{top:-50%;
+        left:51%;
+        transform:rotate(30deg)}
+    
+    
+    100%{top:21.5%;
+    left:50.5%;
+    transform: rotate(370deg);
+}
+}
+.ghostHeadMarcel{
+    background-image: url("./marcelhead.png");
+    background-repeat:no-repeat;
+    background-size:auto 100%;
+    transform: rotate(370deg);
     position:absolute;
     top: 22%;
     left:51%;
     height:70px;
     width:70px;
-    animation:ghostheadleonora 1.5s both;
-    transform-origin: center;
-
+    
 }
-@keyframes ghostheadleonora
+marcelFall{
+    animation:ghostheadmarcel 1.5s both;
+    transform-origin: center;
+}
+@keyframes ghostheadmarcel
 {
     0%{top:-50%;
         left:51%;
@@ -204,9 +399,34 @@
     left:51%;
     transform: rotate(370deg);
 }
-
+}
+.rotateHead{
+    animation: rotateHead 1s forwards;
+    transform-origin: center;
 }
 
+@keyframes rotateHead {
+    from{transform:rotate(30deg)
+  
+  }
+   to{transform:rotate(360deg)}
+  
+  }
+
+
+.flyAway{
+    animation:flyaway 1.5s both;
+
+}
+@keyframes flyaway{
+    30%{transform:translateX(60%);
+        opacity:.1}
+    31%{transform:translatex(-60%);
+        opacity:0}
+    100%{transform:translateX(0);
+        opacity:1}
+    
+}
 .messageBox::-webkit-scrollbar {
     display: none;
   }

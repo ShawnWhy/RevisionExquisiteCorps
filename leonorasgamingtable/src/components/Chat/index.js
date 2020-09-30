@@ -61,7 +61,11 @@ const chatwindowRef = useRef();
 const [roomSelect, setRoomSelect]= useState("");
 
 const[dolls, setDolls]=useState("")
-
+//rotate head animation
+const[rotateHead,setRotateHead]=useState("off")
+//fall animation
+const [maskFall, setMaskFall]=useState("off");
+const [maskFly, setMaskFly]=useState("off");
 //   var chatWindow = reactDOM.
 
 // },[])
@@ -159,6 +163,11 @@ useEffect(()=>{
   else if(tempUsername.length>0){
     setDolls("off");
     setCurtain("on")
+    setMaskFall("on")
+    setTimeout(() => {
+      setMaskFall("off")
+      
+    }, 2000);
 
     setUserName(tempUsername)
       // console.log(userName);
@@ -191,9 +200,13 @@ useEffect(()=>{
 
   //the ghost of surrelists past will speak to you
   const handleMessagetoGhostOut = (event)=>{
+    setMaskFly("on")
     event.preventDefault();
     event.stopPropagation();
     socket.open();
+    setTimeout(() => {
+      setMaskFly("off")
+      }, 1000);
 
     var newMessage = {
       message: message,
@@ -217,11 +230,17 @@ useEffect(()=>{
 
   //emits the sentence
   const submitSentence = ()=>{
+    setRotateHead("on")
+
     socket.open();
 
     // console.log("sending sentence")
     // console.log(sentence)
     socket.emit("sentence",sentence )
+    setTimeout(() => {
+      setRotateHead("off")
+      
+    }, 2000);
   }
   // {"profileImage "+(imageDisplay==="invisible"? 'sleep':'activate' )}
   //opens the modal for the entire poem
@@ -288,7 +307,35 @@ useEffect(()=>{
     "marcelSelected":roomSelect==="8"}
 
   )
+const hostGhost = classNames(
+  {"ghostHeadAndreB":roomSelect==="1",
+  "AndreBFall":roomSelect==="1"&&maskFall==="on",
 
+  "ghostHeadRene":roomSelect==="2",
+  "reneFall":roomSelect==="2"&&maskFall==="on",
+
+  "ghostHeadPablo":roomSelect==="3",
+  "pabloFall":roomSelect==="3"&&maskFall==="on",
+
+  "ghostHeadBenjamin":roomSelect==="4",
+  "benjaminFall":roomSelect==="4"&&maskFall==="on",
+
+  "ghostHeadLeonora":roomSelect==="5",
+  "leonoraFall":roomSelect==="5"&&maskFall==="on",
+
+  "ghostHeadMax":roomSelect==="6",
+  "maxFall":roomSelect==="6"&&maskFall==="on",
+
+  "ghostHeadAndre":roomSelect==="7",
+  "andreFall":roomSelect==="7"&&maskFall==="on",
+
+  "ghostHeadMarcel":roomSelect==="8",
+  "marcelFall":roomSelect==="8"&&maskFall==="on"},
+
+  {"rotateHead":rotateHead==="on"},
+  {"flyAway":maskFly==="on"}
+
+)
 
 
 const rooms=["1","2","3","4","5","6","7","8"]
@@ -426,7 +473,7 @@ return (
   {/* this is the room */}
   <div className="interior ">
 
-<div className={curtain==="on"?"ghostHeadLeonora":"invisible"}></div> 
+<div className={curtain==="on"?hostGhost:"invisible"}></div> 
  
 
 

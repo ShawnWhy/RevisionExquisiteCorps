@@ -35,14 +35,13 @@ const chatwindowRef = useRef();
 //variable used to test and set username
   const [tempUsername, setTempUsername] = useState ("");
 //is username is of the surrealists, then they cannot use it 
-  const [nameWarning, setNameWarning] = useState("off")
 //this is the sentence used to pass on and play the game
   const [sentence, SetSentence] = useState("")
 //this is used to display the first sentence  
   const [currentdisplay, setCurrentDisplay]=useState("Write your first sentence please")
 //the list of users
   const [users, setUsers] = useState([
-    {name:"Marcel", id:0}, {name:"Leonora", id:1}, {name:"Max", id:2}, {name:"Andre", id:3},]);
+    ]);
 //if the user wants to communicate
     const [message, setMessage] = useState("");
 //all the messages goto the message window
@@ -66,7 +65,10 @@ const[rotateHead,setRotateHead]=useState("off")
 //fall animation
 const [maskFall, setMaskFall]=useState("off");
 const [maskFly, setMaskFly]=useState("off");
+// display the name of the current player
+const [currentPlayer, setCurrentPlayer]=useState("")
 //   var chatWindow = reactDOM.
+const [initialInstruction, setInitialInstruction]=useState("Welcome dear visitor, what would you like to be called?")
 
 // },[])
 useEffect(()=>{
@@ -74,10 +76,16 @@ useEffect(()=>{
   {
     setDolls("on");
   } 
-
-
 },[])
+useEffect(()=>{
+  if(tempUsername.length>0){
+    setInitialInstruction("please also Select a spirit guide")
+  }
+  if(tempUsername.length===0){
+    setInitialInstruction("Welcome dear visitor,what would you like to be called?")
+  }
 
+},[tempUsername])
 
   useEffect(() => {
 
@@ -86,7 +94,10 @@ useEffect(()=>{
     socket.connect();
     socket.on("connect", function () {
       // console.log("clientsideworks")
-      socket.emit("username", userName);
+      socket.emit("username", {userName:userName,
+      room:roomSelect
+      }
+      );
     });}
     //set all the users in the chatroom 
     socket.on("users", (users) => {
@@ -111,18 +122,31 @@ useEffect(()=>{
       setUsers((users) => [...users, user]);
     });
 
-    //once this client receives the broadcasted sentence
-    //the sentence is set as the display
-    //sentence.player is the prodcasted next player in line
-    //the sentence is also sent to the allsentences variable
-    //if this client's username == the prodcasted name, 
-    // the turn ariable is turned on and the player can type into the input div
+    socket.on("start",info=>{
+      setAllsentences((allsentences) => [...allsentences, ...info.sentences])
+        setCurrentPlayer(info.currentPlayer)
+        opencurtain();
+      if (info.currentPlayer===userName){
+        setTurn("on")
+
+      }
+      else{setTurn("off")}
+      })
+    
+      socket.on("rejected",()=>{
+        setInitialInstruction("user name already Taken, sorry")
+        setTimeout(() => {
+          setInitialInstruction("Welcome dear visitor,what would you like to be called?")
+          
+        },1000);
+      })
 
     socket.on("sentenceBroadcast", (sentence)=>{
-      // console.log("newsentence")
-      // console.log(sentence.text);
-      // console.log(sentence.player)
+      console.log("newsentence")
+      console.log(sentence.text);
+      console.log(sentence.player)
       setCurrentDisplay(sentence.text);
+      setCurrentPlayer(sentence.player);
       setAllsentences((allsentences) => [...allsentences, sentence.text
       ])
       if (sentence.player===userName){
@@ -151,36 +175,48 @@ useEffect(()=>{
 //opens the curtian and begins the game
  const opencurtain = () =>{
    //the player cannot choose any of the surrelists' names
-  if(tempUsername==="Leonora"||tempUsername==="Max"||tempUsername==="Marcel"||tempUsername==="Andre")
-  {
+  if(tempUsername==="Leonora"||tempUsername==="Max"||tempUsername==="Marcel"||tempUsername==="Andre"||tempUsername==="Rene"||tempUsername==="Pablo"||tempUsername==="Benjamin" ) {
   //if so, the thing warns you and then turns off right after
-   setNameWarning("on");
-   setTimeout(() => {
-   setNameWarning("off")
-    }, 2000);
+   setInitialInstruction("sorry "+tempUsername+" is already playing")
+  
+  }
+  else if (!roomSelect){
+    setInitialInstruction("please click on a spirit guide to choose her/him")
   }
   //if the thing has any thing init, the curtain is turned on
-  else if(tempUsername.length>0){
+  else if(tempUsername.length>0&&roomSelect.length>0){
     setDolls("off");
     setCurtain("on")
     setMaskFall("on")
     setTimeout(() => {
       setMaskFall("off")
-      
-    }, 2000);
+        }, 2000);
 
-    setUserName(tempUsername)
-      // console.log(userName);
   //turns on and connects to socket.io after two seconds
     setTimeout(() => {
       setInterior("on")
-      // console.log(userName); 
-      // const socket = openSocket("http://localhost:3001", {
-      // transports: ["websocket", "polling"]
-      //   }); 
-       }, 2000);
+      }, 2000);
     }
   }
+
+  //opens the curtian and begins the game
+ const submitName = () =>{
+  //the player cannot choose any of the surrelists' names
+ if(tempUsername==="Leonora"||tempUsername==="Max"||tempUsername==="Marcel"||tempUsername==="Andre"||tempUsername==="Rene"||tempUsername==="Pablo"||tempUsername==="Benjamin" ) {
+ //if so, the thing warns you and then turns off right after
+  setInitialInstruction("sorry "+tempUsername+" is already playing")
+ 
+ }
+ else if (!roomSelect){
+   setInitialInstruction("please click on a spirit guide to choose her/him")
+ }
+ else if(tempUsername.length>0&&roomSelect.length>0){
+  setUserName(tempUsername)
+
+
+ }
+
+ }
 
   //emits the messageout
   const handleMessageOut = (event) => {
@@ -189,6 +225,7 @@ useEffect(()=>{
     var newMessage = {
       message: message,
       username: userName,
+      room:roomSelect
     };
     // console.log("messageout")
     // console.log(newMessage)
@@ -212,6 +249,7 @@ useEffect(()=>{
     var newMessage = {
       message: message,
       username: userName,
+      room:roomSelect
       };
       // console.log("ghostmessagesent")
       // console.log(newMessage)
@@ -235,15 +273,15 @@ useEffect(()=>{
 
     socket.open();
 
-    // console.log("sending sentence")
-    // console.log(sentence)
-    socket.emit("sentence",sentence )
+    socket.emit("sentence",{
+      sentence:sentence,
+      room:roomSelect}
+       )
     setTimeout(() => {
       setRotateHead("off")
       
     }, 2000);
   }
-  // {"profileImage "+(imageDisplay==="invisible"? 'sleep':'activate' )}
   //opens the modal for the entire poem
   const openPoem = () =>{
     setPoemModal("on")
@@ -266,7 +304,8 @@ useEffect(()=>{
     setChat("off")
   }
 
-// ghosts
+// sets the appearance of the dolls as they are 
+//wither selected or not
 
   const andreb = classNames("invisible",
   {
@@ -308,9 +347,11 @@ useEffect(()=>{
     "marcelSelected":roomSelect==="8"}
 
   )
+
+// className settings for the host head in the gaming room 
 const hostGhost = classNames(
   {"ghostHeadAndreB":roomSelect==="1",
-  "AndreBFall":roomSelect==="1"&&maskFall==="on",
+  "andreBFall":roomSelect==="1"&&maskFall==="on",
 
   "ghostHeadRene":roomSelect==="2",
   "reneFall":roomSelect==="2"&&maskFall==="on",
@@ -338,8 +379,9 @@ const hostGhost = classNames(
 
 )
 
-
-const rooms=["1","2","3","4","5","6","7","8"]
+// the room numbers
+const rooms=["1","2","3","4","5","6","7","8"];
+//the name tag setting that displays the name tag on mouse over
 const [nameTag, setNameTag]=useState({
   1:"off",
   2:"off",
@@ -350,6 +392,7 @@ const [nameTag, setNameTag]=useState({
   7:"off",
   8:"off",
 })
+//the name tag setting that displays when the doll is clicked on 
 const [nameTagTwo, setNameTagTwo]=useState({
   1:"off",
   2:"off",
@@ -361,6 +404,8 @@ const [nameTagTwo, setNameTagTwo]=useState({
   8:"off",
 })
 const [previousDoll,setPreviousDoll]=useState("")
+
+//selects the guid as well as he room
 const submitRoom = (event)=>{
   event.stopPropagation();
   event.preventDefault();
@@ -377,15 +422,16 @@ const submitRoom = (event)=>{
   setPreviousDoll(room)
   console.log("previousedoll")
  console.log(previousDoll)
+ }
 
-  }
-
+ // the name tag is displayed after user moves the curser over the figure
 const displayNameTag=(event)=>{
   event.stopPropagation();
   event.preventDefault();
   var nameId = event.target.id;
   setNameTag({...nameTag,[nameId]:"on"})
 }
+//the name tag of the guides is hidden after user moves curser away
 const hideNameTag=(event)=>{
   event.stopPropagation();
   event.preventDefault();
@@ -395,60 +441,57 @@ const hideNameTag=(event)=>{
 }
 }
 
+const nextPlayer = (event)=>{
+  event.preventDefault();
+  event.stopPropagation();
+  socket.open();
+  socket.emit("nextPlayer",roomSelect)
+    
+}
+socket.on("nextPlayer",sentCurrentPlayer=>{
+  console.log(sentCurrentPlayer)
+  console.log(currentPlayer)
+  setCurrentPlayer(sentCurrentPlayer);
+  console.log("player and current player")
+  console.log(currentPlayer)
+  console.log(userName)
+  if(sentCurrentPlayer===userName){
+    setTurn("on")
+    console.log("turnedon")
+  }
+  else{
+    setTurn("off")
+    console.log("turnedoff")
+  }
 
-// const dollRef1=useRef()
-// const dollRef2=useRef()
-// const dollRef3=useRef()
-// const dollRef4=useRef()
-// const dollRef5=useRef()
-// const dollRef6=useRef()
-// const dollRef7=useRef()
-// const dollRef8=useRef()
+})
+
+//displays the current player at the top of the main display 
+// const currentPlayerDisplay = classNames({
+//   "invisible":interior!=="on"
+// })
 
 
  
 return (
 //everything
 <div className="allContainer">
-  <div className={dolls==="on"?"dollsBackDrop":"invisible"}></div>
-      {/* name input section */}
-      <div className={"nameInputDiv "+(curtain==="on"? " invisible":"")}>
-        <div className="nameQuestion">
-          Welcome dear visitor,
-          what would you like to be called?
-          </div>
-          {/* input it self */}
-          <input className="nameinput" type="text" onChange={handleNameInputChange}></input>
-          <input type="submit" onClick = {opencurtain}></input>
-          {/* the warning div */}
-          <div className={"nameWarning "+(nameWarning==="on"? "visible":"invisible")}>Sorry {tempUsername} is already playing</div>
-
-    </div>
-<div id ={rooms[0]} className={andreb} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[1]==="on"?"":"invisible")}>Andre B</p></div>
-  <div id ={rooms[1]} className={rene} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[2]==="on"?"":"invisible")}>Rene</p></div>
-  <div id ={rooms[2]} className={pablo} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[3]==="on"?"":"invisible")}>Pablo</p></div>
-  <div id ={rooms[3]} className={benjamin} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[4]==="on"?"":"invisible")}>Benjamin</p></div>
-  <div id ={rooms[4]} className={leonora} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[5]==="on"?"":"invisible")}>Leonora</p></div>
-  <div id={rooms[5]} className={max} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[6]==="on"?"":"invisible")}>max</p></div>
-  <div id ={rooms[6]} className={andre} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[7]==="on"?"":"invisible")}>Andre M</p></div>
-  <div id ={rooms[7]} className={marcel} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[8]==="on"?"":"invisible")}>Marcel</p></div>
 <div className={"finalPoemModal "+(poemModal==="on"? "":"invisible")}>
+
     <div className={"finalPoemModalContent "+(poemModal==="on"? "visible":"invisible")}>
-      <div className="closeModal" onClick={closePoem}>X</div>
+    <div className="closeModalPoem" onClick={closePoem}>X</div>
+
     <ul className="FinalPoemText">
                 
                 {allsentences.map((sentence, index) => (
                   <li key={index}>{sentence}</li>
                 ))}
               </ul>
-              <button><a href={"data:text/plain;charset=utf-8, "+ JSON.stringify(allsentences,null,1)} download="poem.txt">download poem</a></button>
-
-
     </div>
+    <button className="downloadButton"><a href={"data:text/plain;charset=utf-8, "+ JSON.stringify(allsentences,null,1)} download="poem.txt">download poem</a></button>
 
-    
-    </div>
-    <div className={"rules "+(rules ==="on"? "":"invisible")}>
+ </div>
+<div className={"rules "+(rules ==="on"? "":"invisible")}>
       <div className={"rulesContent "+(rules ==="on"? "visible":"invisible")}>
         <div className="closeRules" onClick={closeRules}>X</div>
         <p> For a minimum of three players, the first player writes any sentence, question, or statement and shows it to the next player. The second player then must write the exact opposite of the statement, word by word. The first statement is conceiled and passed onto the third player who must negate the negation of the first sentence.</p>
@@ -464,6 +507,28 @@ return (
         </p>
     </div>
   </div>
+  <div className={dolls==="on"?"dollsBackDrop":"invisible"}></div>
+      {/* name input section */}
+      <div className={"nameInputDiv "+(curtain==="on"? " invisible":"")}>
+        <div className="nameQuestion">
+          {initialInstruction}
+          </div>
+          {/* input it self */}
+          <input className="nameinput" type="text" onChange={handleNameInputChange}></input>
+          <input type="submit" onClick = {submitName}></input>
+          {/* the warning div */}
+
+    </div>
+<div id ={rooms[0]} className={andreb} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[1]==="on"?"":"invisible")}>Andre B</p></div>
+  <div id ={rooms[1]} className={rene} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[2]==="on"?"":"invisible")}>Rene</p></div>
+  <div id ={rooms[2]} className={pablo} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[3]==="on"?"":"invisible")}>Pablo</p></div>
+  <div id ={rooms[3]} className={benjamin} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[4]==="on"?"":"invisible")}>Benjamin</p></div>
+  <div id ={rooms[4]} className={leonora} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[5]==="on"?"":"invisible")}>Leonora</p></div>
+  <div id={rooms[5]} className={max} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[6]==="on"?"":"invisible")}>max</p></div>
+  <div id ={rooms[6]} className={andre} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[7]==="on"?"":"invisible")}>Andre M</p></div>
+  <div id ={rooms[7]} className={marcel} onClick={submitRoom} onMouseOver={displayNameTag} onMouseLeave={hideNameTag}><p className={"nameTag "+(nameTag[8]==="on"?"":"invisible")}>Marcel</p></div>
+
+
 {/* the curtain and the name block */}
   <div className="exterior">
     <div className={"leftCurtain "+( curtain==="on"? "leftcurtainOn":"")}></div>
@@ -484,6 +549,7 @@ return (
       <div className={"title "+(interior==="on"?"titleAnimate": "invisible")}>
       <div className={interior==="on"?"titleText":"invisible"}>welcome {userName}</div>
       <div className={interior==="on"?"titleText":"invisible"}><h1>let's play OPPOSITES!</h1></div>
+      <div className={interior==="on"?"titleText":"invisible"}>current player : {currentPlayer}</div>
         {/* the game sentence display would go here */}
       </div>
     <div className={"table "+ (interior==="on"? "tableAnimate" : "invisible")}>
@@ -497,7 +563,7 @@ return (
       <input  className = {"sentenceInput "+(turn==="on"?"": "invisible")} onChange={TypeSentence} type="text" placeholder="write your sentence please"></input>
       <button className={"submitbutton "+(turn==="on"?"": "invisible")} onClick={submitSentence}>broadcast Sentence</button>
       {/* this is the button to skip to the next player */}
-      <button className="turnButtom gameButton" onClick={submitSentence}>next player</button>
+      <button className="turnButtom gameButton" onClick={nextPlayer}>next player</button>
       <button className="openPoemButton gameButton" onClick={openPoem}>see poem</button>
       <button className="openRulesButton gameButton" onClick={openRules}>see Rules</button>
 
@@ -542,10 +608,7 @@ return (
                {/* the roster with ghost  */}
               <h3>players in the room</h3>
                 <ul id="users">
-                <li className={(chat==="on"?"centeredLi":"")}>Leonora</li>
-                <li className={(chat==="on"?"centeredLi":"")}>Marcel</li>
-                <li className={(chat==="on"?"centeredLi":"")}>Max</li>
-                <li className={(chat==="on"?"centeredLi":"")}>Andre</li>
+                
                 {users.map(({ name, id }) => (
                   <li key={id} className={(chat==="on"?"centeredLi":"")}>{name}</li>
                 ))}

@@ -4,7 +4,6 @@ import React, { useEffect, useState, useRef } from "react";
 import Style from "./chat.css"
 // import Moment from "react-moment";
 import reactDOM from "react-dom";
-import moment from "moment";
 import io from "socket.io-client";
 // import { set } from "mongoose";
 import classNames from "classnames";
@@ -19,11 +18,15 @@ function Chat(){
 //   const socket = io("http://localhost:3001", {autoConnect:false,
 //   transports: ["websocket", "polling"]
 // });
-const socket = openSocket ("wss://leonorasgamingroom.herokuapp.com/",{autoConnect:false,
+const socket = openSocket ("wss://revisionexquisite.herokuapp.com/",{
 
     transports:["websocket","polling"]
 });
 
+const sendheatbeat = function sendHeartbeat(){
+  setTimeout(sendHeartbeat, 8000);
+  io.sockets.emit('ping', { beat : 1 });
+}
 //referenced mchatwindow
 const chatwindowRef = useRef();
 //turn interior stuffs on 
@@ -40,7 +43,7 @@ const chatwindowRef = useRef();
 //this is the sentence used to pass on and play the game
   const [sentence, SetSentence] = useState("")
 //this is used to display the first sentence  
-  const [currentdisplay, setCurrentDisplay]=useState("Write your first sentence please")
+  const [currentdisplay, setCurrentDisplay]=useState("please begin the story")
 //the list of users
   const [users, setUsers] = useState([
     ]);
@@ -50,6 +53,10 @@ const chatwindowRef = useRef();
     const [messages, setMessages] = useState([]);
 // this is the repository of all of the written sentences during the game
   const [allsentences, setAllsentences]=useState([])
+  const [story, setStory]=useState("");
+  const [allStorySegments, setAllStorySegments]=useState([])
+  const [storySegment, setStorySegment]=useState("");
+  const [segmentEnd, setSegmentEnd]=useState("")
 //this controls the final poem modal
   const [poemModal, setPoemModal]=useState("off")
 //this controls the modal for the rules
@@ -60,6 +67,7 @@ const chatwindowRef = useRef();
 // this happens automatically and changes when the 
 //username changes
 const [roomSelect, setRoomSelect]= useState("");
+const [turnSegment, setTurnSegment]=useState("");
 
 const[dolls, setDolls]=useState("")
 //rotate head animation
@@ -70,15 +78,33 @@ const [maskFly, setMaskFly]=useState("off");
 // display the name of the current player
 const [currentPlayer, setCurrentPlayer]=useState("")
 //   var chatWindow = reactDOM.
-const [initialInstruction, setInitialInstruction]=useState("Welcome dear visitor, what would you like to be called?")
+const [initialInstruction, setInitialInstruction]=useState("Welcome dear visitor,  what would you like to be called?")
+const createEndDisplay =(segment)=>{
+  // console.log(segment)
+  // console.log('setend')
+   var segmentArray = segment.split(" ")
+  //  console.log(segmentArray)
+   if(segmentArray.length>5){
+   segmentArray=segmentArray.slice(segmentArray.length - 5, segmentArray.Length)
+  //  console.log(segmentArray)
+  }
+  
 
+   var segmentString = segmentArray.join(" ");
+   return segmentString
+  //  console.log(segmentString)
+  //  setSegmentEnd (segmentString)
+  //  setCurrentDisplay(segmentString)
+  //  console.log(segmentEnd)
+
+}
 // },[])
 useEffect(()=>{
   if(curtain==="off")
   {
     setDolls("on");
   } 
-},[])
+},[curtain])
 useEffect(()=>{
   if(tempUsername.length>0){
     setInitialInstruction("please also Select a spirit guide")
@@ -88,6 +114,12 @@ useEffect(()=>{
   }
 
 },[tempUsername])
+
+//creates the segments that the users see
+  useEffect(()=>{
+    createEndDisplay(turnSegment)
+
+  },[turnSegment])
 
   useEffect(() => {
 
@@ -125,7 +157,12 @@ useEffect(()=>{
     });
 
     socket.on("start",info=>{
-      setAllsentences((allsentences) => [...allsentences, ...info.sentences])
+      // setAllStorySegments((allStorySegments) => [...allStorySegments, ...info.segments])
+      // var tempStory = allStorySegments.join(" ")
+      // console.log(tempStory)
+      // setStory(tempStory)
+      // console.log('story')
+      // console.log(story)
         setCurrentPlayer(info.currentPlayer)
         opencurtain();
       if (info.currentPlayer===userName){
@@ -133,7 +170,7 @@ useEffect(()=>{
 
       }
       else{setTurn("off")
-      setCurrentDisplay("")}
+    setCurrentDisplay("")}
       })
     
       socket.on("rejected",()=>{
@@ -144,15 +181,21 @@ useEffect(()=>{
         },1000);
       })
 
-    socket.on("sentenceBroadcast", (sentence)=>{
+    socket.on("segmentBroadcast", (segment)=>{
       console.log("newsentence")
-      console.log(sentence.text);
-      console.log(sentence.player)
-      setCurrentDisplay(sentence.text);
-      setCurrentPlayer(sentence.player);
-      setAllsentences((allsentences) => [...allsentences, sentence.text
+      console.log(segment.text);
+      console.log(segment.player)
+      setTurnSegment(segment.text)
+      setCurrentPlayer(segment.player);
+      setCurrentDisplay(segment.tail)
+      setAllStorySegments((allStorySegments) => [...allStorySegments, segment.text
       ])
-      if (sentence.player===userName){
+      // var tempStory = allStorySegments.join(' ')
+      // setStory(tempStory)
+      // console.log('story')
+      // console.log(story)
+
+      if (segment.player===userName){
         setTurn("on")
       }
       else{setTurn("off")}
@@ -264,22 +307,27 @@ useEffect(()=>{
   
 
   //takes the value from the sentence input and sets it as a variable ready to emit
-  const TypeSentence = (e)=>{
+  const TypeSegment = (e)=>{
     e.preventDefault();
     e.stopPropagation();
-    SetSentence(e.target.value);
+    setStorySegment(e.target.value);
   }
 
   //emits the sentence
-  const submitSentence = ()=>{
+  const submitSegment =()=>{
     setRotateHead("on")
-
+    let tail = createEndDisplay(storySegment)
     socket.open();
-
-    socket.emit("sentence",{
-      sentence:sentence,
+    console.log("tail=====  ")
+    console.log(tail)
+    socket.emit("segment",{
+      segment:storySegment,
+      tail:tail,
       room:roomSelect}
        )
+      
+       console.log("emitted sentence to server")
+       console.log(storySegment)
     setTimeout(() => {
       setRotateHead("off")
       
@@ -412,19 +460,19 @@ const [previousDoll,setPreviousDoll]=useState("")
 const submitRoom = (event)=>{
   event.stopPropagation();
   event.preventDefault();
-  console.log(event.target.id)
+  // console.log(event.target.id)
   var room =event.target.id;
   setRoomSelect(room)
   setNameTagTwo({[room]:"on"})
-  console.log(nameTagTwo);
+  // console.log(nameTagTwo);
   if(previousDoll.length>0){
     setNameTag({...nameTag,[previousDoll]:"off"})
-    console.log("nametag ")
-    console.log(nameTag)
+    // console.log("nametag ")
+    // console.log(nameTag)
   }
   setPreviousDoll(room)
-  console.log("previousedoll")
- console.log(previousDoll)
+  // console.log("previousedoll")
+//  console.log(previousDoll)
  }
 
  // the name tag is displayed after user moves the curser over the figure
@@ -452,19 +500,19 @@ const nextPlayer = (event)=>{
     
 }
 socket.on("nextPlayer",sentCurrentPlayer=>{
-  console.log(sentCurrentPlayer)
-  console.log(currentPlayer)
+  // console.log(sentCurrentPlayer)
+  // console.log(currentPlayer)
   setCurrentPlayer(sentCurrentPlayer);
-  console.log("player and current player")
-  console.log(currentPlayer)
-  console.log(userName)
+  // console.log("player and current player")
+  // console.log(currentPlayer)
+  // console.log(userName)
   if(sentCurrentPlayer===userName){
     setTurn("on")
-    console.log("turnedon")
+    // console.log("turnedon")
   }
   else{
     setTurn("off")
-    console.log("turnedoff")
+    // console.log("turnedoff")
   }
 
 })
@@ -479,35 +527,14 @@ socket.on("nextPlayer",sentCurrentPlayer=>{
 return (
 //everything
 <div className="allContainer">
-<div className={"finalPoemModal "+(poemModal==="on"? "":"invisible")}>
 
-    <div className={"finalPoemModalContent "+(poemModal==="on"? "visible":"invisible")}>
-    <div className="closeModalPoem" onClick={closePoem}>X</div>
 
-    <ul className="FinalPoemText">
-                
-                {allsentences.map((sentence, index) => (
-                  <li key={index}>{sentence}</li>
-                ))}
-              </ul>
-    </div>
-    <button className="downloadButton"><a href={"data:text/plain;charset=utf-8, "+ JSON.stringify(allsentences,null,1)} download="poem.txt">download poem</a></button>
-
- </div>
 <div className={"rules "+(rules ==="on"? "":"invisible")}>
       <div className={"rulesContent "+(rules ==="on"? "visible":"invisible")}>
         <div className="closeRules" onClick={closeRules}>X</div>
-        <p> For a minimum of three players, the first player writes any sentence, question, or statement and shows it to the next player. The second player then must write the exact opposite of the statement, word by word. The first statement is conceiled and passed onto the third player who must negate the negation of the first sentence.</p>
-        <p>Here is an example composed by M Sandoz, F R Simon, and M Zimbacca </p>
-        <p>
-        <br />When my mother swigs champagne.
-        <br />My father’s corpse gets drunk on chianti.
-        <br />Our mother’s infants dry up tearlessly.
-        <br />The moribund waters of my fatherland.
-        <br />An infant dessicates our universe.
-        <br />An old corpse waters their afterlife.
-        <br />Two infants absorb what precedes death
-        </p>
+        <p>How to play: When this game is played in person, each author writes a sentence (or a few sentences) on a piece of paper, then folds the paper so that all or some part of what they wrote is obscurred. The next author then contributes to the story using only the part of the sentence that is visible below the fold.</p>
+      
+        
     </div>
   </div>
   <div className={dolls==="on"?"dollsBackDrop":"invisible"}></div>
@@ -551,7 +578,7 @@ return (
  
       <div className={"title "+(interior==="on"?"titleAnimate": "invisible")}>
       <div className={interior==="on"?"titleText":"invisible"}>welcome {userName}</div>
-      <div className={interior==="on"?"titleText":"invisible"}><h1>let's play OPPOSITES!</h1></div>
+      <div className={interior==="on"?"titleText":"invisible"}><h1>let's play Exquisite Corpse!</h1></div>
       <div className={interior==="on"?"titleText":"invisible"}>current player : {currentPlayer}</div>
         {/* the game sentence display would go here */}
       </div>
@@ -563,11 +590,11 @@ return (
 
 
       {/* this is the input div for the sentence, will only be visible when turn is on */}
-      <input  className = {"sentenceInput "+(turn==="on"?"": "invisible")} onChange={TypeSentence} type="text" placeholder="write your sentence please"></input>
-      <button className={"submitbutton "+(turn==="on"?"": "invisible")} onClick={submitSentence}>broadcast Sentence</button>
+      <input  className = {"sentenceInput "+(turn==="on"?"": "invisible")} onChange={TypeSegment} type="text" placeholder="please proceed" ></input>
+      <button className={"submitbutton "+(turn==="on"?"": "invisible")} onClick={submitSegment}>broadcast Story Segment</button>
       {/* this is the button to skip to the next player */}
       <button className="turnButtom gameButton" onClick={nextPlayer}>next player</button>
-      <button className="openPoemButton gameButton" onClick={openPoem}>see poem</button>
+      <button className="gameButton"><a href={"data:text/plain;charset=utf-8, "+ allStorySegments.join("\n")} download="poem.txt">download story</a></button>
       <button className="openRulesButton gameButton" onClick={openRules}>see Rules</button>
 
       </div>
@@ -602,7 +629,7 @@ return (
               onChange={(event) => setMessage(event.currentTarget.value)}
             />
             <button className={"chatbtn "+(chat==="on"?"":"invisible")} onClick={handleMessageOut}>speak</button>
-            <button className={"chatbtn "+(chat==="on"?"":"invisible")} onClick={handleMessageOut} onClick={handleMessagetoGhostOut}>speak with ghost</button>
+            <button className={"chatbtn "+(chat==="on"?"":"invisible")} onClick={handleMessagetoGhostOut}>speak with ghost</button>
             <button className={"chatbtn "+(chat==="on"?"":"invisible")} onClick={closeChat}>close chat</button>
             <button className={"chatbtn "+(chat==="on"?"invisible":"")} onClick={openChat}>open chat</button>
 

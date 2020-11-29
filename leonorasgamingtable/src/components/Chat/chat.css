@@ -164,11 +164,13 @@
     background-size:auto 100%;
     position:absolute;
     transform: rotate(370deg);
-    top:21%;
-    left:51.3%;
-    transform: rotate(370deg);
-    height:75px;
-    width:75px;
+        background-color:seashell;
+        top: 30%;
+        left:60%;
+        height:60px;
+        width:60px;
+        border-radius: 50%;
+        border: double black
 
 
 }
@@ -179,14 +181,13 @@
 }
 @keyframes ghostheadandreb{
     0%{top:-50%;
-        left:51%;
+        left:60%;
         transform:rotate(30deg)}
     
     
-    100%{top:21%;
-    left:51.3%;
-    transform: rotate(370deg);
-}
+    100%{top:30%;
+    left:60%;
+    transform: rotate(370deg);}
 }
 
 .ghostHeadRene{
@@ -196,10 +197,14 @@
         background-size:auto 100%;
         transform: rotate(370deg);
         position:absolute;
-        top: 20%;
-        left:49.5%;
-        height:85px;
-        width:85px;
+        transform: rotate(370deg);
+        background-color:seashell;
+        top: 30%;
+        left:60%;
+        height:60px;
+        width:60px;
+        border-radius: 50%;
+        border: double black
         
     
     }
@@ -211,14 +216,13 @@
 
     @keyframes ghostheadrene{
         0%{top:-50%;
-            left:50%;
+            left:60%;
             transform:rotate(30deg)}
         
         
-        100%{top:20%;
-        left:49.5%;
-        transform: rotate(370deg);
-    }
+        100%{top:30%;
+        left:60%;
+        transform: rotate(370deg);}
     }
     .ghostHeadPablo{
         background-image: url("./pablohead.png");
@@ -226,10 +230,13 @@
         background-size:auto 100%;
         position:absolute;
         transform: rotate(370deg);
-        top: 22%;
-        left:51%;
-        height:70px;
-        width:70px;
+        background-color:seashell;
+        top: 30%;
+        left:60%;
+        height:60px;
+        width:60px;
+        border-radius: 50%;
+        border: double black
        
     
     }
@@ -241,14 +248,13 @@
     @keyframes ghostheadpablo
     {
         0%{top:-50%;
-            left:51%;
+            left:60%;
             transform:rotate(30deg)}
         
         
-        100%{top:22%;
-        left:51%;
-        transform: rotate(370deg);
-    }
+        100%{top:30%;
+        left:60%;
+        transform: rotate(370deg);}
     }
     
 
@@ -258,10 +264,13 @@
         background-size:auto 100%;
         position:absolute;
         transform: rotate(370deg);
-        top: 21.5%;
-        left:50%;
-        height:80px;
-        width:80px;
+        background-color:seashell;
+        top: 30%;
+        left:60%;
+        height:60px;
+        width:60px;
+        border-radius: 50%;
+        border: double black
         
     
     }
@@ -273,12 +282,12 @@
     @keyframes ghostheadbenjamin
     {
         0%{top:-50%;
-            left:51%;
+            left:60%;
             transform:rotate(30deg)}
         
         
-        100%{top:21.5%;
-        left:50%;
+        100%{top:30%;
+        left:60%;
         transform: rotate(370deg);
     }
     }
@@ -288,11 +297,14 @@
         background-size:auto 100%;
         position:absolute;
         transform: rotate(370deg);
-        top: 22%;
-        left:51%;
-        height:75px;
-        width:75px;
-        
+        background-color:seashell;
+        top: 30%;
+        left:60%;
+        height:60px;
+        width:60px;
+        border-radius: 50%;
+        border: double black
+
     
     }
     .leonoraFall{
@@ -303,12 +315,12 @@
     @keyframes ghostheadleonora
     {
         0%{top:-50%;
-            left:51%;
+            left:60%;
             transform:rotate(30deg)}
         
         
-        100%{top:22%;
-        left:51%;
+        100%{top:30%;
+        left:60%;
         transform: rotate(370deg);
     }
     }
@@ -319,10 +331,13 @@
     background-size:auto 100%;
     position:absolute;
     transform: rotate(370deg);
-    top: 21%;
-    left:50%;
-    height:75px;
-    width:75px;
+    background-color:seashell;
+    top: 30%;
+    left:60%;
+    height:60px;
+    width:60px;
+    border-radius: 50%;
+    border: double black
     
 }
 .maxFall{
@@ -333,25 +348,29 @@
 @keyframes ghostheadmax
 {
     0%{top:-50%;
-        left:49%;
+        left:60%;
         transform:rotate(30deg)}
     
-     
-    100%{top:21%;
-    left:50%;
-    transform: rotate(380deg);
+    
+    100%{top:30%;
+    left:60%;
+    transform: rotate(370deg);
 }
 }
 .ghostHeadAndre{
     background-image: url("./andrehead.png");
     background-repeat:no-repeat;
+    position:absolute;
+
     background-size:auto 100%;
     transform: rotate(370deg);
-    position:absolute;
-    top: 21.5%;
-    left:50.5%;
-    height:75px;
-    width:75px;
+    background-color:seashell;
+    top: 30%;
+    left:60%;
+    height:60px;
+    width:60px;
+    border-radius: 50%;
+    border: double black
    
 
 }
@@ -363,25 +382,28 @@
 @keyframes ghostheadandre
 {
     0%{top:-50%;
-        left:51%;
+        left:60%;
         transform:rotate(30deg)}
     
     
-    100%{top:21.5%;
-    left:50.5%;
-    transform: rotate(370deg);
-}
+    100%{top:30%;
+    left:60%;
+    transform: rotate(370deg);}
 }
 .ghostHeadMarcel{
     background-image: url("./marcelhead.png");
+    position:absolute;
+
     background-repeat:no-repeat;
     background-size:auto 100%;
     transform: rotate(370deg);
-    position:absolute;
-    top: 22%;
-    left:50%;
-    height:70px;
-    width:70px;
+    background-color:seashell;
+    top: 30%;
+    left:60%;
+    height:60px;
+    width:60px;
+    border-radius: 50%;
+    border: double black
     
 }
 .marcelFall{
@@ -391,14 +413,13 @@
 @keyframes ghostheadmarcel
 {
     0%{top:-50%;
-        left:51%;
+        left:60%;
         transform:rotate(30deg)}
     
     
-    100%{top:22%;
-    left:50%;
-    transform: rotate(370deg);
-}
+    100%{top:30%;
+    left:60%;
+    transform: rotate(370deg);}
 }
 .rotateHead{
     animation: rotateHead 1s forwards;
@@ -595,7 +616,7 @@ p{
   .sidenavchat{
       border:double black;
       position:fixed;
-      top:10%;
+      top:2%;
       right:11%;
       z-index:1;
       background-color:white;

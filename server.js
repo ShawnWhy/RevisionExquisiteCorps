@@ -10,11 +10,11 @@ const io = require("socket.io").listen(server, {
 
 
 
-// app.use(express.static("leonorasgamingtable/build"));
+app.use(express.static("leonorasgamingtable/build"));
 
-// app.get("*", (req, res) => {
-//   res.sendFile(path.join(__dirname,  "leonorasgamingtable/build", "index.html"));
-// });
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname,  "leonorasgamingtable/build", "index.html"));
+});
 const PORT = process.env.PORT || 3001 ;
 // players with custom IDs
   const users ={}  
@@ -85,6 +85,7 @@ const nextPlayer = function(room,players){
 //   i[room]=0
 //   console.log("i = 0 now")  
 // }
+if(players[i[room]]){
 currentPlayer[room]= players[i[room]].name
 console.log("currentplayer")
 console.log (currentPlayer[room])
@@ -94,7 +95,7 @@ console.log (currentPlayer[room])
         i[room]=0
     }    
   } 
-
+}
 
 
 
@@ -106,26 +107,20 @@ console.log (currentPlayer[room])
 //    
     //the client is to receive a username
   client.on("username", username => {
-    // console.log("username received")
-    // console.log(username);
-    user = {
+  user = {
       name: username.userName,
       id: client.id,
       room:username.room
     };
-    // if (Object.values(users).includes(user)==true){
-    //   console.log("useralreadyexists")
-    // }
-    // else{
-      var room = username.room
+    var room = username.room
       if (usernames[room].indexOf(username.userName)!==-1){
         console.log("useralreadyexists")
         client.emit("rejected")
         client.disconnect();
       }
       else{
-        usernames[room].push(username.userName)
-        client.join(username.room)
+      usernames[room].push(username.userName)
+      client.join(username.room)
       users[client.id] = user;
       client.broadcast.to(room).emit("connected", user);
       var players = Object.values(users)
@@ -188,6 +183,7 @@ client.on("nextPlayer",room=>{
     players = players.filter((player)=>player.room===room)
     console.log(players)
     console.log(i[room])
+    if(players[i[room]]){
     currentPlayer[room]=players[i[room]].name
 //broadcasted to otheres and also emit the next player in line to others
     io.to(room).emit("sentenceBroadcast",{
@@ -199,6 +195,7 @@ client.on("nextPlayer",room=>{
     if(i[room]>players.length-1){
         i[room]=0
     }
+}
 })
 
 //the server receives the message

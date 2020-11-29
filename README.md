@@ -1,7 +1,7 @@
 # Lady-Leonora-s-Surreal-Game-Table
 Play Surrealist Games Across the Internet with Friends!
 
-http://ladyleonorasgamingroom.herokuapp.com/
+http://leonorasgamingroom.herokuapp.com/
 
 
 the player goes on to the page and input their preferred name to connect.

@@ -8,19 +8,21 @@ import moment from "moment";
 import io from "socket.io-client";
 // import { set } from "mongoose";
 import classNames from "classnames";
+import openSocket from 'socket.io-client';
+
 
 
 function Chat(){
 
  
 
-  const socket = io("http://localhost:3001", {autoConnect:false,
-  transports: ["websocket", "polling"]
-});
-// const socket = openSocket ("wss://ladyleonorasgamingroom.herokuapp.com/",{autoConnect:false,
-
-//     transports:["websocket","polling"]
+//   const socket = io("http://localhost:3001", {autoConnect:false,
+//   transports: ["websocket", "polling"]
 // });
+const socket = openSocket ("wss://leonorasgamingroom.herokuapp.com/",{autoConnect:false,
+
+    transports:["websocket","polling"]
+});
 
 //referenced mchatwindow
 const chatwindowRef = useRef();
@@ -130,7 +132,8 @@ useEffect(()=>{
         setTurn("on")
 
       }
-      else{setTurn("off")}
+      else{setTurn("off")
+      setCurrentDisplay("")}
       })
     
       socket.on("rejected",()=>{

@@ -44,7 +44,7 @@ const PORT = process.env.PORT || 3001 ;
     8:0
     };
 //all of the couplets  
-var segments = {
+var sentences = {
   1:[],
   2:[], 
   3:[],
@@ -87,8 +87,8 @@ const nextPlayer = function(room,players){
 // }
 if(players[i[room]]){
 currentPlayer[room]= players[i[room]].name
-// console.log("currentplayer")
-// console.log (currentPlayer[room])
+console.log("currentplayer")
+console.log (currentPlayer[room])
     io.to(room).emit("nextPlayer",players[i[room]].name)
     i[room]++
     if(i[room]>players.length-1){
@@ -124,32 +124,35 @@ currentPlayer[room]= players[i[room]].name
       users[client.id] = user;
       client.broadcast.to(room).emit("connected", user);
       var players = Object.values(users)
+      //getting the current players in this room 
+      //is there in only one person, he/she will be the initial player
       players = players.filter((player)=>player.room===room)
       if (players.length<2){
-        segments[room]=[];
         // console.log("there is only one person")
         // console.log(i[room]);
         i[room] =0
         currentPlayer[room] = username.userName
       }
+      //this puts the surrealists' names into the chatlist
       var host = ghosts[room].name;
       host={name:host,
             id:1}
-      // console.log(host)
-      players.push(host)
+      console.log(host)
+      players.push(host) 
       // console.log(players)
       // console.log(i[room])
+      //emits the chat participants
       io.to(room).emit("users", players);
       if(players[0]){
     // console.log(players[0].name)}
     //if there are players in the room, the game starts
     if(players.length>0){
-        // console.log("start");
-        // console.log("start current player")
-        // console.log(currentPlayer[room])
+        console.log("start");
+        console.log("start current player")
+        console.log(currentPlayer[room])
 
       client.emit("start", {
-        // segments:segments[room],
+        sentences:sentences[room],
        currentPlayer:currentPlayer[room]
       })
       i[room]++
@@ -174,13 +177,12 @@ client.on("nextPlayer",room=>{
 
 )
   //when a player emit a sentence, it is received here and is broadcasted to others
-  client.on("segment", segment=>{
-      console.log("received sentence")
-      console.log(segment)    
-      console.log('i')
-      console.log(i)
-    var room = segment.room
-    // segments[room].push(segment.segment);
+  client.on("sentence", sentence=>{
+      // console.log("received sentence")
+      // console.log(sentence)
+      // console.log(i)
+    var room = sentence.room
+    sentences[room].push(sentence.sentence);
     var players = Object.values(users) 
     players = players.filter((player)=>player.room===room)
     console.log(players)
@@ -188,12 +190,12 @@ client.on("nextPlayer",room=>{
     if(players[i[room]]){
     currentPlayer[room]=players[i[room]].name
 //broadcasted to otheres and also emit the next player in line to others
-    io.to(room).emit("segmentBroadcast",{
-      text:segment.segment,
+    io.to(room).emit("sentenceBroadcast",{
+      text:sentence.sentence,
       player:players[i[room]].name,
-      tail:segment.tail
+      tail:sentence.tail
     })
-    console.log("server emitted sentencec")
+    // console.log("server emitted sentencec")
     i[room]++
     if(i[room]>players.length-1){
         i[room]=0
@@ -220,10 +222,6 @@ client.on("nextPlayer",room=>{
     // console.log(username)
     delete users[client.id];
     io.emit("disconnected", client.id);
-   
-    
-
-    
   });
 
 client.on("sendToGhost", (message)=>{
@@ -241,9 +239,9 @@ client.on("sendToGhost", (message)=>{
   var quoteLength = ghosts[room].quotes.length;
   var randomNumber = Math.floor(Math.random() * quoteLength)
   
-  // console.log(randomNumber)
+  console.log(randomNumber)
   var ghostMessage = ghosts[room].quotes[randomNumber]
-  // console.log(ghostMessage)
+  console.log(ghostMessage)
   io.emit("message",{
     text:ghostMessage,
     date: new Date().toISOString(),

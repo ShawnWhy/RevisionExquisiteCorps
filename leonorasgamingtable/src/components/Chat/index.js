@@ -19,7 +19,7 @@ function Chat(){
 //   const socket = io("http://localhost:3001", {autoConnect:false,
 //   transports: ["websocket", "polling"]
 // });
-const socket = openSocket ("wss:////revisionexquisite.herokuapp.com/",{autoConnect:false,
+const socket = openSocket ("wss://revisionexquisite.herokuapp.com/",{autoConnect:false,
 
      transports:["websocket","polling"]
 });
@@ -273,7 +273,8 @@ useEffect(()=>{
   //emits the sentence
   const submitSentence = ()=>{
     setRotateHead("on")
-    let tail = setCurrentDisplay(sentence)
+    let tail = createEndDisplay(sentence)
+    console.log(tail);
 
     socket.open();
 
@@ -501,9 +502,9 @@ return (
         <div className="closeRules" onClick={closeRules}>X</div>
         <p>How to play: </p>
         <p>When this game is played in person, each author writes a sentence 
-        <br>(or a few sentences) on a piece of paper, then folds the paper so</br>
-        <br> that all or some part of what they wrote is obscurred. The next author</br>
-        <br>then contributes to the story using only the part of the sentence that is visible below the fold.</br>
+        <br />(or a few sentences) on a piece of paper, then folds the paper so
+        <br /> that all or some part of what they wrote is obscurred. The next author
+        <br />then contributes to the story using only the part of the sentence that is visible below the fold.
         </p>
 
     </div>
@@ -549,7 +550,7 @@ return (
  
       <div className={"title "+(interior==="on"?"titleAnimate": "invisible")}>
       <div className={interior==="on"?"titleText":"invisible"}>welcome {userName}</div>
-      <div className={interior==="on"?"titleText":"invisible"}><h1>let's play OPPOSITES!</h1></div>
+      <div className={interior==="on"?"titleText":"invisible"}><h1>let's play Exquisite Corpse!</h1></div>
       <div className={interior==="on"?"titleText":"invisible"}>current player : {currentPlayer}</div>
         {/* the game sentence display would go here */}
       </div>
